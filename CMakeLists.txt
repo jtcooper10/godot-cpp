@@ -40,7 +40,7 @@ cmake_minimum_required(VERSION 3.6)
 option(GENERATE_TEMPLATE_GET_NODE "Generate a template version of the Node class's get_node." ON)
 
 # Default build type is Debug in the SConstruct
-if(CMAKE_BUILD_TYPE STREQUAL "")
+if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
 	set(CMAKE_BUILD_TYPE Debug)
 endif()
 
@@ -175,10 +175,12 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_C
 
 # Create the correct name (godot.os.build_type.system_bits)
 
-set(BITS 32)
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(BITS 64)
-endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+if(NOT DEFINED BITS)
+	set(BITS 32)
+	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+		set(BITS 64)
+	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+endif()
 
 string(TOLOWER "${CMAKE_SYSTEM_NAME}" SYSTEM_NAME)
 string(TOLOWER "${CMAKE_BUILD_TYPE}" BUILD_TYPE)
